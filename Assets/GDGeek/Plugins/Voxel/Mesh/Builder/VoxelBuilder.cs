@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.Text;
 
 namespace GDGeek{
 	
 	public class VoxelBuilder{
 
-       
+      
 
 
         public static VoxelMeshData Struct2Data(VoxelStruct vs){
@@ -59,9 +60,47 @@ namespace GDGeek{
 
 		
 	}
+
+
 	public class VoxelBuilderHelper{
+
+		public static string GetKey(string md5){
+			return "gzip_" + md5;
+		}
+
+		public static VoxelMeshData LoadFromCache(string key){
+
+
+			VoxelMeshData data = null;
+			if (Cache.HasKey (key)) {
+				string json = Encoding.UTF8.GetString(ZipFile.Decompressed((Cache.GetBytes (key))));
+				data = JsonUtility.FromJson<VoxelMeshData> (json);
+			}
+
+			return data;
+		}
+		public static void SaveToCache(string key, VoxelMeshData data){
+			string json = JsonUtility.ToJson (data);
+			GDGeek.Cache.SetBytes (key, GDGeek.ZipFile.Compression(Encoding.UTF8.GetBytes(json)));
+			//GK7Zip.SetToFile (key, JsonUtility.ToJson(data));
+			//JsonUtility.ToJson(data)
+		}
+
 		public static VoxelMeshData Struct2DataInCache(VoxelStruct vs){
-            return VoxelBuilder.Struct2Data(vs);
+
+
+			Debug.Log ("!!!!");
+			string md5 = MagicaVoxelFormater.GetMd5 (vs);
+			VoxelMeshData data = LoadFromCache (GetKey(md5));
+
+			if(data == null){
+
+				Debug.Log ("???");
+				data =  VoxelBuilder.Struct2Data(vs);
+				SaveToCache (GetKey(md5), data);
+			}
+			return data;
+           
         
         }
 		public static MeshFilter Struct2Filter(VoxelStruct vs){

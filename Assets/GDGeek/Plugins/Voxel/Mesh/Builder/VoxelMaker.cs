@@ -23,15 +23,22 @@ namespace GDGeek{
 
 			#endif
 		}
+		public static Task BuildingTask(GameObject obj, System.IO.BinaryReader br, Material material, int reversal = 0){
+			return new Task ();
+		
+		}
 		public static GameObject Building(GameObject obj, System.IO.BinaryReader br, Material material, int reversal = 0)
         {
 
 			MagicaVoxel magica = MagicaVoxelFormater.ReadFromBinary (br);
             VoxelStruct vs = VoxelStruct.Reversal(magica.vs, reversal);// VoxelBuilder.Reversal(magica.vs, reversal);
-            var data = VoxelBuilder.Struct2Data (vs);
+			var data = VoxelBuilderHelper.Struct2DataInCache (vs);
 			var mesh = VoxelBuilder.Data2Mesh (data);
 			var filter = VoxelBuilder.Mesh2Filter (mesh);
+
 			VoxelBuilder.FilterAddRenderer (filter, material);
+
+
 			filter.transform.SetParent (obj.transform);
 			filter.transform.localEulerAngles = Vector3.zero;
 			filter.transform.localPosition = data.offset;

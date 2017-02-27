@@ -10,45 +10,48 @@ public class VoxelBodyRuntime : MonoBehaviour {
     public VoxelBodyInfo _info;
     public Material _material = null;
 
-    void mount(Material material, GameObject parent, TextAsset file, Vector3 position, Vector3 scale, Vector3 angles, int reversal = 0)
+	Task mount(Material material, GameObject parent, TextAsset file, Vector3 position, Vector3 scale, Vector3 angles, int reversal = 0)
     {
-        GameObject obj = null;
-        Transform transform = parent.transform.Find("Mount");
-        if (transform != null)
-        {
-            GameObject.DestroyImmediate(transform.gameObject);
-        }
-        obj = new GameObject("Mount");
+		Task task = new Task ();
+		TaskManager.PushFront (task, delegate() {
+			
+		
+			GameObject obj = null;
+			Transform transform = parent.transform.Find ("Mount");
+			if (transform != null) {
+				GameObject.DestroyImmediate (transform.gameObject);
+			}
+			obj = new GameObject ("Mount");
 
-        var br = VoxelReader.ReadFromFile(file);
+			var br = VoxelReader.ReadFromFile (file);
 
-        VoxelMaker.Building(obj, br, material, reversal);
+			VoxelMaker.Building (obj, br, material, reversal);
 
-        obj.transform.parent = parent.transform;
+			obj.transform.parent = parent.transform;
 
-        obj.transform.localPosition = position;
-        obj.transform.localScale = scale;
-        obj.transform.localEulerAngles = angles;
+			obj.transform.localPosition = position;
+			obj.transform.localScale = scale;
+			obj.transform.localEulerAngles = angles;
+		});
+		return task;
+			
     }
-    void mount(Material material, GameObject parent, TextAsset file, VoxelBodyInfo.Data data, int reversal = 0)
+    Task mount(Material material, GameObject parent, TextAsset file, VoxelBodyInfo.Data data, int reversal = 0)
     {
-        this.mount(material, parent, file, data.position, data.scale, data.angles, reversal);
+        return this.mount(material, parent, file, data.position, data.scale, data.angles, reversal);
     }
-    void head(Material material)
+    Task head(Material material)
     {
-        mount(material,
+		
+		return  mount(material,
               _body._head, _file._head,
-              _info.head);/*
-              new Vector3(0.005f, 0.07f, 0.035f),
-              new Vector3(0.01f, 0.01f, 0.01f),
-              new Vector3(0, 180, 0)
-              );*/
+              _info.head);
 
     }
 
-    void leftHead(Material material)
+    Task leftHead(Material material)
     {
-        mount(material,
+		return mount(material,
         _body._leftHand, _file._hand,
         _info.leftHead
         );
@@ -56,9 +59,9 @@ public class VoxelBodyRuntime : MonoBehaviour {
 
     }
 
-    void rightHand(Material material)
+    Task rightHand(Material material)
     {
-        mount(material,
+        return mount(material,
             _body._rightHand, _file._hand,
             _info.rightHead,
             (int)(VoxelStruct.ReversalAxis.XAxis)
@@ -66,9 +69,9 @@ public class VoxelBodyRuntime : MonoBehaviour {
 
     }
 
-    void hip(Material material)
+    Task hip(Material material)
     {
-        mount(material,
+        return mount(material,
             _body._hips, _file._hip,
             _info.hips/*
             new Vector3(0.005f, -0.03f, 0),
@@ -78,17 +81,17 @@ public class VoxelBodyRuntime : MonoBehaviour {
 
     }
 
-    void leftFoot(Material material)
+    Task leftFoot(Material material)
     {
-        mount(material,
+		return  mount(material,
             _body._leftFoot, _file._foot,
           _info.leftFoot
             );
 
     }
-    void rightFoot(Material material)
+    Task rightFoot(Material material)
     {
-        mount(material,
+        return mount(material,
             _body._rightFoot, _file._foot,
             _info.rightFoot,
             (int)(VoxelStruct.ReversalAxis.XAxis)
@@ -96,17 +99,17 @@ public class VoxelBodyRuntime : MonoBehaviour {
 
     }
 
-    void leftUpLeg(Material material)
+    Task leftUpLeg(Material material)
     {
-        mount(material,
+		return  mount(material,
             _body._leftUpLeg, _file._upleg,
           _info.leftUpLeg
             );
 
     }
-    void rightUpLeg(Material material)
+    Task rightUpLeg(Material material)
     {
-        mount(material,
+		return mount(material,
             _body._rightUpLeg, _file._upleg,
            _info.rightUpLeg,
             (int)(VoxelStruct.ReversalAxis.XAxis)
@@ -114,17 +117,17 @@ public class VoxelBodyRuntime : MonoBehaviour {
 
     }
 
-    void leftLeg(Material material)
+    Task leftLeg(Material material)
     {
-        mount(material,
+		return mount(material,
             _body._leftLeg, _file._leg,
           _info.leftLeg
             );
 
     }
-    void rightLeg(Material material)
+    Task rightLeg(Material material)
     {
-        mount(material,
+		return mount(material,
             _body._rightLeg, _file._leg,
          _info.rightLeg,
             (int)(VoxelStruct.ReversalAxis.XAxis)
@@ -132,17 +135,17 @@ public class VoxelBodyRuntime : MonoBehaviour {
 
     }
 
-    void spine1(Material material)
+    Task spine1(Material material)
     {
-        mount(material,
+		return mount(material,
             _body._spine1, _file._spine2,
           _info.spine1
             );
 
     }
-    void spine2(Material material)
+    Task spine2(Material material)
     {
-        mount(material,
+		return mount(material,
             _body._spine2, _file._spine,
           _info.spine2
             );
@@ -150,17 +153,17 @@ public class VoxelBodyRuntime : MonoBehaviour {
     }
 
 
-    void leftForeArm(Material material)
+    Task leftForeArm(Material material)
     {
-        mount(material,
+		return  mount(material,
             _body._leftForeArm, _file._forearm,
           _info.leftForeArm
             );
 
     }
-    void rightForeArm(Material material)
+    Task rightForeArm(Material material)
     {
-        mount(material,
+		return mount(material,
             _body._rightForeArm, _file._forearm,
            _info.rightForeArm,
             (int)(VoxelStruct.ReversalAxis.XAxis)
@@ -168,17 +171,17 @@ public class VoxelBodyRuntime : MonoBehaviour {
 
     }
 
-    void leftArm(Material material)
+    Task leftArm(Material material)
     {
-        mount(material,
+       return mount(material,
             _body._leftArm, _file._arm,
             _info.leftArm
             );
 
     }
-    void rightArm(Material material)
+   Task rightArm(Material material)
     {
-        mount(material,
+       return  mount(material,
             _body._rightArm, _file._arm,
            _info.rightArm,
             (int)(VoxelStruct.ReversalAxis.XAxis)
@@ -201,23 +204,25 @@ public class VoxelBodyRuntime : MonoBehaviour {
         {
             _info = this.gameObject.AddComponent<VoxelBodyInfo>();
         }
-        head(mat);
-        leftHead(mat);
-        rightHand(mat);
-        hip(mat);
-        leftFoot(mat);
-        rightFoot(mat);
-        leftUpLeg(mat);
-        rightUpLeg(mat);
-        leftLeg(mat);
-        rightLeg(mat);
-        spine1(mat);
-        spine2(mat);
-        leftForeArm(mat);
-        rightForeArm(mat);
-        leftArm(mat);
-        rightArm(mat);
 
+		TaskList  tl = new TaskList();
+		tl.push(head(mat));
+		tl.push(leftHead(mat));
+		tl.push(rightHand(mat));
+		tl.push(hip(mat));
+		tl.push(leftFoot(mat));
+		tl.push(rightFoot(mat));
+		tl.push(leftUpLeg(mat));
+		tl.push(rightUpLeg(mat));
+		tl.push(leftLeg(mat));
+		tl.push(rightLeg(mat));
+		tl.push(spine1(mat));
+		tl.push(spine2(mat));
+		tl.push(leftForeArm(mat));
+		tl.push(rightForeArm(mat));
+		tl.push(leftArm(mat));
+		tl.push(rightArm(mat));
+		TaskManager.Run (tl);
 
 
         // _file._head

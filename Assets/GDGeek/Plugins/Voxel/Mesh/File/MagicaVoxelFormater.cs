@@ -242,8 +242,7 @@ namespace GDGeek{
 
 		}
 		public static string GetMd5(VoxelStruct vs){
-            return "";
-            /*
+          
 			MemoryStream memoryStream = new MemoryStream ();
 			BinaryWriter binaryWriter = new BinaryWriter(memoryStream);
 			WriteToBinary (vs, binaryWriter);
@@ -254,8 +253,8 @@ namespace GDGeek{
 			foreach (byte b in result)
 			{
 				fileMD5 += Convert.ToString(b, 16);
-			}*/
-			//return fileMD5; 
+			}
+			return fileMD5; 
 		}
 		public static void WriteToBinary(VoxelStruct vs, System.IO.BinaryWriter bw){
 
